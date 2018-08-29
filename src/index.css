@@ -32,6 +32,10 @@ ol, ul {
   width: 77px;
 }
 
+.square:hover, .divBtn:hover {
+	background-color: lightyellow;
+}
+
 .square:focus {
   outline: none;
 }
@@ -55,7 +59,7 @@ ol, ul {
   display:inline-block;
 }
 
-.square-winner {
+.square-winner, .divBtn-winner {
   background-color: yellow;
 }
 
@@ -86,4 +90,6 @@ ol, ul {
 .square-active {
   background-color: lightgreen;
 }
+
+
 

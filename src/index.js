@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 function Square(props) {
-	
     return (
         <button className={props.squareClassName} onClick={props.onClick}>
             {props.value}
@@ -118,13 +117,68 @@ class Game extends React.Component {
             lastClicked = (x * 3) + y;
         }
 
-
-        //console.log(current.x);
         this.setState({
             stepNumber: step,
             xIsNext: (step % 2) === 0,
             lastClicked: lastClicked
         });
+    }
+	
+	historyHoverIn(step) {
+		const historyLocations = this.state.historyLocations.slice(0, step);
+		const current = historyLocations[historyLocations.length - 1];
+
+		let hovering = null;
+
+		if(step > 0) {
+			const y = current.y;
+			const x = current.x;
+
+			hovering = (x * 3) + y;
+		}
+
+		this.setState({
+			lastClicked: hovering
+		});       
+    }
+	
+	historyHoverOut(step) {
+		const historyLocations = this.state.historyLocations.slice();
+		const current = historyLocations[historyLocations.length - 1];
+		
+		let lastClicked = null;
+
+		if(step > 0) {
+			const y = current.y;
+			const x = current.x;
+
+			lastClicked = (x * 3) + y;
+		}
+		
+		this.setState({
+			lastClicked: lastClicked
+		});
+    }
+	
+	setHistoryWinningRows(winner) {
+		const historyLocations = this.state.historyLocations.slice();
+		const history = this.state.history.slice();
+		
+	
+		for(let h = 0; h < historyLocations.length; h++ ) {
+			let y = historyLocations[h].y;
+			let x = historyLocations[h].x;
+
+			let squareNumber = (x * 3) + y;
+			
+			let isWinningSquare = winner.squares.findIndex(w => w === squareNumber);
+			if(isWinningSquare >= 0) {
+				console.log(squareNumber + ' is a winner!');
+			}
+			else {
+				console.log(squareNumber + ' is not a winner :(');
+			}
+		}
     }
 
     calculateWinner(squares) {
@@ -139,7 +193,6 @@ class Game extends React.Component {
             [2, 4, 6]
         ];
 
-        
         for (let i = 0; i < lines.length; i++) {
             const [a, b, c] = lines[i];
             
@@ -148,7 +201,7 @@ class Game extends React.Component {
                     player: squares[a],
                     squares: [a,b,c]
                 };
-
+				
                 return winner;
             }
         }
@@ -165,7 +218,7 @@ class Game extends React.Component {
                 player: 'N',
                 squares: []
             };
-
+			
             return winner;
         }
         return null;
@@ -180,11 +233,19 @@ class Game extends React.Component {
             const desc = move ?
             'Move #' + move + ': ' + ((move % 2 === 0) ? 'O' : 'X') + ' [' + this.state.historyLocations[move - 1].y + ',' + this.state.historyLocations[move - 1].x + ']' :
             'Go to game start';
-
-            const divClassName = (move === this.state.stepNumber) ? "divBtn divBtnActive" : "divBtn";
+			
+			let divClassName = (move === this.state.stepNumber) ? "divBtn divBtnActive" : "divBtn";
+			if(winner && winner['player'] && this.state.historyLocations[move - 1] ) {
+				let squareNumber = (this.state.historyLocations[move - 1].x * 3) + this.state.historyLocations[move - 1].y;
+			
+				let isWinningSquare = winner.squares.findIndex(w => w === squareNumber);
+				if(isWinningSquare >= 0) {
+					divClassName += ' divBtn-winner';
+				}
+			}
 
             return (
-                <div key={move} className={divClassName} onClick={() => this.jumpTo(move)}>
+                <div key={move} className={divClassName} onClick={() => this.jumpTo(move)} onMouseEnter={() => this.historyHoverIn(move)} onMouseLeave={() => this.historyHoverOut(move)}>
                     {desc}
                 </div>
             );
@@ -197,6 +258,7 @@ class Game extends React.Component {
             }
             else {
                 status = winner['player'] + " Wins!";
+				//this.setHistoryWinningRows(winner);
             }
         }
         else {
