@@ -21,15 +21,15 @@ ol, ul {
   background: #fff;
   border: 1px solid #999;
   float: left;
-  font-size: 24px;
+  font-size: 40px;
   font-weight: bold;
   line-height: 34px;
-  height: 34px;
+  height: 77px;
   margin-right: -1px;
   margin-top: -1px;
   padding: 0;
   text-align: center;
-  width: 34px;
+  width: 77px;
 }
 
 .square:focus {
@@ -41,19 +41,49 @@ ol, ul {
 }
 
 .game {
-  display: flex;
-  flex-direction: row;
+
 }
 
 .game-info {
-  margin-left: 20px;
+  display:inline-block;
+  margin-left: 50px;
+  width: 350px;
 }
 
-.winningSquare {
+.game-board {
+  float: left;
+  display:inline-block;
+}
+
+.square-winner {
   background-color: yellow;
 }
 
+.divBtn {
+  border-top: 1px solid #999;
+  border-left: 1px solid #999;
+  border-right: 1px solid #999;
+  padding: 20px;
+  cursor: pointer;
+}
 
-.moveBtnActive {
+.game-moves .divBtn:last-child {
+  border-bottom: 1px solid #999;
+}
+
+.divBtnActive {
 	font-weight: bold;
 }
+
+.square-x {
+  color: blue;
+}
+
+.square-o {
+  color: mediumpurple;
+}
+
+.square-active {
+  background-color: lightgreen;
+}
+
